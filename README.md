@@ -1,4 +1,4 @@
-# EcoGraph-RAG
+# GraphRAG
 
 ### A Deterministic Graph-RAG System for Ecological Intelligence from Imaging Data
 
