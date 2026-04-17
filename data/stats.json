@@ -1,0 +1,44 @@
+[
+  {
+    "variable": "seagrass_extent",
+    "trend": "declining",
+    "drivers": ["temperature_increase", "nutrient_loading", "coastal_urbanization", "turbidity"],
+    "indicators": ["NDVI_drop", "loss_of_benthic_cover", "reduced_light_penetration"],
+    "confidence": 0.86
+  },
+  {
+    "variable": "seagrass_health",
+    "trend": "degrading",
+    "drivers": ["eutrophication", "sediment_disturbance", "boat_activity"],
+    "indicators": ["chlorophyll_reduction", "shoot_density_drop", "fragmentation_index"],
+    "confidence": 0.83
+  },
+  {
+    "variable": "benthic_habitat_quality",
+    "trend": "variable",
+    "drivers": ["storm_events", "human_pressure", "water_clarity"],
+    "indicators": ["substrate_change", "habitat_fragmentation", "turbidity_index"],
+    "confidence": 0.78
+  },
+  {
+    "variable": "water_temperature",
+    "trend": "increasing",
+    "drivers": ["climate_change", "marine_heatwaves"],
+    "indicators": ["SST_anomalies", "thermal_stress_events"],
+    "confidence": 0.92
+  },
+  {
+    "variable": "coastal_biodiversity",
+    "trend": "declining",
+    "drivers": ["habitat_loss", "seagrass_degradation"],
+    "indicators": ["species_richness_drop", "trophic_structure_shift"],
+    "confidence": 0.88
+  },
+  {
+    "variable": "turbidity",
+    "trend": "increasing",
+    "drivers": ["runoff", "sediment_resuspension", "human_activity"],
+    "indicators": ["reduced_light_penetration", "satellite_reflectance_change"],
+    "confidence": 0.81
+  }
+]
