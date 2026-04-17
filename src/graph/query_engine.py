@@ -49,7 +49,7 @@ class GraphQueryEngine:
         scored_results.sort(key=lambda x: x[0], reverse=True)
 
         # return top-k results (important for LLM quality)
-        top_results = [entry for _, entry in scored_results[:6]]
+        top_results = [entry for _, entry in scored_results[:3]]
 
         return top_results
 
