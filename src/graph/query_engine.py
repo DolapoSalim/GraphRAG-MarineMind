@@ -23,35 +23,101 @@ class GraphQueryEngine:
         return text.lower().strip()
 
     # -------------------------
-    # Core Search Logic (Ranked Retrieval)
+    # Tokenization
+    # -------------------------
+    def _tokenize(self, text: str) -> List[str]:
+        return self._normalize(text).replace("_", " ").split()
+
+    # -------------------------
+    # Intent Detection
+    # -------------------------
+    def _detect_intent(self, query: str) -> str:
+        q = query.lower()
+
+        if any(word in q for word in ["method", "estimate", "measure", "map"]):
+            return "method"
+
+        if any(word in q for word in ["cause", "affect", "driver", "impact"]):
+            return "driver"
+
+        if any(word in q for word in ["indicate", "indicator", "signal"]):
+            return "indicator"
+
+        return "general"
+
+    # -------------------------
+    # Core Search Logic
     # -------------------------
     def search(self, query: str) -> List[Dict[str, Any]]:
-        query_words = self._normalize(query).split()
+        query_words = self._tokenize(query)
+        intent = self._detect_intent(query)
 
         scored_results = []
 
         for entry in self.graph:
-            subject = self._normalize(entry.get("subject", ""))
-            predicate = self._normalize(entry.get("predicate", ""))
-            obj = self._normalize(entry.get("object", ""))
-            context = self._normalize(entry.get("context", ""))
+            subject = entry.get("subject", "")
+            predicate = entry.get("predicate", "")
+            obj = entry.get("object", "")
+            context = entry.get("context", "")
 
-            # combine all fields into searchable text
-            full_text = f"{subject} {predicate} {obj} {context}"
+            subject_tokens = self._tokenize(subject)
+            predicate_tokens = self._tokenize(predicate)
+            object_tokens = self._tokenize(obj)
+            context_tokens = self._tokenize(context)
 
-            # simple relevance scoring
-            score = sum(1 for word in query_words if word in full_text)
+            # -------------------------
+            # Intent-based filtering
+            # -------------------------
+            if intent == "method":
+                if predicate not in ["estimates", "detects", "maps"]:
+                    continue
 
-            if score > 0:
+            elif intent == "driver":
+                if predicate not in ["causes", "impacts"]:
+                    continue
+
+            elif intent == "indicator":
+                if predicate not in ["indicates"]:
+                    continue
+
+            # -------------------------
+            # Weighted scoring
+            # -------------------------
+            score = 0
+
+            for word in query_words:
+                if word in object_tokens:
+                    score += 3
+                elif word in subject_tokens:
+                    score += 2
+                elif word in predicate_tokens:
+                    score += 1
+                elif word in context_tokens:
+                    score += 1
+
+            # -------------------------
+            # Phrase boost
+            # -------------------------
+            full_text = " ".join(subject_tokens + predicate_tokens + object_tokens)
+            if " ".join(query_words) in full_text:
+                score += 3
+
+            # -------------------------
+            # Threshold filter
+            # -------------------------
+            if score >= 2:
                 scored_results.append((score, entry))
 
-        # sort by relevance (highest score first)
+        # -------------------------
+        # Sort results
+        # -------------------------
         scored_results.sort(key=lambda x: x[0], reverse=True)
 
-        # return top-k results (important for LLM quality)
-        top_results = [entry for _, entry in scored_results[:3]]
-
-        return top_results
+        # -------------------------
+        # Return top-k
+        # -------------------------
+        top_k = 3
+        return [entry for _, entry in scored_results[:top_k]]
 
     # -------------------------
     # Formatting
@@ -60,11 +126,10 @@ class GraphQueryEngine:
         subject = entry.get("subject", "")
         predicate = entry.get("predicate", "")
         obj = entry.get("object", "")
-        context = entry.get("context", "")
         source = entry.get("source", "")
 
-        if context:
-            return f"{subject} → {predicate} → {obj} ({context})"
+        if source:
+            return f"{subject} → {predicate} → {obj} [source: {source}]"
         return f"{subject} → {predicate} → {obj}"
 
     # -------------------------

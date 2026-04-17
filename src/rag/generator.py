@@ -21,8 +21,13 @@ class OllamaGenerator:
     FORMAT YOUR ANSWER LIKE THIS:
 
     - Direct Answer:
+    Provide a concise list of methods or concepts.
+
     - Evidence from Graph:
+    List the relevant graph relationships exactly as given.
+
     - Ecological Interpretation:
+    Brief scientific explanation (2–3 sentences max).
 
     ----------------------
 

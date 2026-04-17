@@ -176,13 +176,6 @@
   },
   {
     "subject": "Sentinel_2",
-    "predicate": "detects",
-    "object": "seagrass_extent",
-    "context": "multi_temporal_analysis",
-    "source": "paper_6"
-  },
-  {
-    "subject": "Sentinel_2",
     "predicate": "supports",
     "object": "change_detection",
     "context": "time_series",
@@ -264,5 +257,33 @@
     "object": "biodiversity",
     "context": "ecosystem_impact",
     "source": "paper_8"
-  }
+  },
+  {
+    "subject": "Sentinel-2",
+    "predicate": "estimates",
+    "object": "seagrass_extent",
+    "context": "remote_sensing",
+    "source": "Copernicus Sentinel-2 Mission (ESA)"
+},
+{
+    "subject": "Satellite_imagery",
+    "predicate": "estimates",
+    "object": "seagrass_extent",
+    "context": "benthic_mapping",
+    "source": "Copernicus Sentinel-2 Mission (ESA)"
+},
+{
+    "subject": "Drone_imagery",
+    "predicate": "maps",
+    "object": "seagrass_distribution",
+    "context": "high_resolution_monitoring",
+    "source": "Copernicus Sentinel-2 Mission (ESA)"
+},
+{
+    "subject": "Underwater_video",
+    "predicate": "observes",
+    "object": "seagrass_cover",
+    "context": "field_validation",
+    "source": "Copernicus Sentinel-2 Mission (ESA)"
+    }
 ]
