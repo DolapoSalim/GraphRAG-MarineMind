@@ -7,44 +7,47 @@ class OllamaGenerator:
         self.model = model
         self.url = f"{host}/api/generate"
 
-    def generate_answer(self, query: str, context: List[str]) -> str:
-        """
-        Generate grounded ecological answers using Phi via Ollama.
-        """
-
-        # Step 1: compress graph output into context
-        context_text = "\n".join(context)
-
-        # Step 2: strict grounding prompt (IMPORTANT)
+    def generate_answer(self, query: str, context: str) -> str:
         prompt = f"""
-You are an expert ecological AI assistant for marine ecosystem analysis.
+    You are a marine ecology research assistant.
 
-You MUST follow these rules:
-- Only use the provided context
-- Do NOT invent new facts
-- If information is missing, say "not available in graph data"
+    You MUST follow these rules:
+    1. Use ONLY the provided context
+    2. Do NOT add external knowledge
+    3. Be concise and scientific
+    4. No repetition
+    5. No storytelling
 
-Context:
-{context_text}
+    FORMAT YOUR ANSWER LIKE THIS:
 
-Question:
-{query}
+    - Direct Answer:
+    - Evidence from Graph:
+    - Ecological Interpretation:
 
-Provide a clear, scientifically accurate explanation.
-Focus on ecological interpretation (not general definitions).
-"""
+    ----------------------
 
-        # Step 3: call Ollama API
+    CONTEXT:
+    {context}
+
+    QUESTION:
+    {query}
+
+    ANSWER:
+    """
+
         response = requests.post(
             self.url,
             json={
                 "model": self.model,
                 "prompt": prompt,
-                "stream": False
+                "stream": False,
+                "options": {
+                    "num_predict": 180
+                }
             }
         )
 
         if response.status_code != 200:
-            raise RuntimeError(f"Ollama error: {response.text}")
+            raise RuntimeError(response.text)
 
         return response.json()["response"].strip()

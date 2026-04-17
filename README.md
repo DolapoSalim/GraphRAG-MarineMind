@@ -1,123 +1,115 @@
-# GraphRAG
+# 🌊 GraphRAG-MarineMind
 
-### A Deterministic Graph-RAG System for Ecological Intelligence from Imaging Data
-
----
-
-## Overview
-**GraphRAG** is a hybrid AI system that combines **knowledge graphs, statistical evidence, and retrieval-augmented generation (RAG)** to deliver **reliable, explainable insights** for ecological monitoring.
-Unlike traditional RAG systems that rely solely on vector similarity, EcoGraph-RAG introduces a **3-tier deterministic reasoning pipeline** that prioritizes structured ecological knowledge over unstructured text.
-> Designed for: environmental monitoring, marine ecology, and AI-driven scientific reasoning.
+A lightweight **GraphRAG-based ecological reasoning system** for analyzing marine ecosystem dynamics using structured knowledge graphs, statistical ecological indicators, and local LLM reasoning.
 
 ---
 
-## Why This Project Matters
-Modern ecological research increasingly depends on **imaging technologies** such as:
-* Underwater video
-* Photogrammetry
-* Satellite imagery (e.g., Sentinel-2)
-However, translating these into **Ecological Observation Variables (EOVs)** is non-trivial.
+## 🧠 Overview
 
-EcoGraph-RAG bridges this gap by answering questions like:
+GraphRAG-MarineMind is a multi-layer retrieval-augmented generation system designed for **marine ecology analysis**, combining:
 
-* *Which imaging method best estimates macroalgal coverage?*
-* *What ecological variables can be derived from underwater video?*
-* *How reliable is photogrammetry compared to satellite data?*
+- 🟢 Knowledge Graph (structured ecological relationships)
+- 🟡 Statistical Layer (ecological trends & drivers)
+- 🧠 Local LLM reasoning (Phi-3 via Ollama)
+
+The system enables grounded ecological Q&A using structured environmental knowledge.
 
 ---
 
-## System Architecture
+## 🏗️ System Architecture
+User Query
+↓
+Graph Retrieval (Tier 1)
+↓
+Statistical Lookup (Tier 2)
+↓
+Context Builder (Fusion Layer)
+↓
+Phi-3 Mini (Local LLM)
+↓
+Scientific Answer
 
-EcoGraph-RAG uses a **deterministic 3-tier reasoning system**:
-
-```
-                ┌──────────────────────┐
-                │      User Query      │
-                └─────────┬────────────┘
-                          │
-                  ┌───────▼────────┐
-                  │    Router      │
-                  └───────┬────────┘
-                          │
-        ┌─────────────────┼─────────────────┐
-        │                 │                 │
-┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼────────┐
-│   Tier 1      │ │   Tier 2      │ │   Tier 3        │
-│ Knowledge     │ │ Statistical   │ │ Vector Search   │
-│ Graph (Facts) │ │ Evidence      │ │ (Documents)     │
-└───────────────┘ └───────────────┘ └────────────────┘
-                          │
-                  ┌───────▼────────┐
-                  │     LLM        │
-                  │  Generation    │
-                  └───────────────┘
-```
 
 ---
 
-## Key Features
-### Deterministic Reasoning
-### Hybrid Knowledge Integration
-### Domain-Specific Intelligence
-### Explainable Outputs
----
+## 📊 System Components
 
-## Project Structure
+### 🟢 Tier 1 — Knowledge Graph
+Captures ecological relationships such as:
 
-```
-graph-rag/
-│
-├── data/
-│   ├── graph.json              # Knowledge graph (SPOC triples)
-│   ├── stats.json              # Statistical relationships
-│   ├── documents/              # Research papers / text data
-│
-├── src/
-│   ├── graph/                  # Graph query engine
-│   ├── stats/                  # Statistical retrieval
-│   ├── vector/                 # Embeddings + retrieval
-│   ├── rag/                    # Routing + generation logic
-│   ├── api/                    # FastAPI interface
-│
-├── notebooks/                  # Experiments & prototyping
-├── README.md
-├── requirements.txt
-```
-
-## Installation
-
-```bash
-git clone https://github.com/yourusername/eco-graph-rag.git
-cd eco-graph-rag
-
-pip install -r requirements.txt
-```
+- Sentinel-2 → detects → seagrass_extent  
+- Seagrass_loss → reduces → biodiversity  
+- Satellite_imagery → estimates → benthic_cover  
 
 ---
 
-## Usage
+### 🟡 Tier 2 — Ecological Statistics Layer
+Represents ecological trends and drivers:
 
-### Run basic query
-
-```python
-from src.rag.router import route_query
-
-query = "Best method for estimating macroalgae coverage"
-response = route_query(query)
-
-print(response)
-```
-
-##  Technical Stack
-
-* Python
-* FAISS / ChromaDB (vector search)
-* FastAPI (API layer)
-* LLM (OpenAI or local models via Ollama)
+- seagrass_extent → declining  
+- drivers: temperature increase, eutrophication, human activity  
+- indicators: NDVI change, habitat fragmentation  
 
 ---
 
+### 🧠 LLM Layer (Phi-3 via Ollama)
+Used to:
+- interpret retrieved ecological knowledge
+- generate structured scientific explanations
+- avoid hallucination using context grounding
 
-## ⭐ If you find this project useful
+---
 
-Give it a star ⭐ and follow for updates!
+## ⚙️ Features
+
+- Fully local LLM inference (Ollama + Phi-3)
+- Graph-based ecological reasoning
+- Statistical ecological indicator layer
+- Context fusion between structured data sources
+- Lightweight CLI query engine
+
+---
+
+## 🔬 Example Query
+
+**Input:**
+> What methods estimate seagrass extent?
+
+**Output (example):**
+- Sentinel-2 satellite imagery  
+- Multitemporal remote sensing analysis  
+- Benthic cover estimation from satellite data  
+
+---
+
+## 🛠️ Tech Stack
+
+- Python
+- Ollama (Phi-3 Mini)
+- JSON-based Knowledge Graph
+- Rule-based statistical inference layer
+
+---
+
+## 🎯 Purpose
+
+This project demonstrates:
+- Hybrid Graph + Statistical RAG design
+- Ecological knowledge representation
+- Local LLM integration for scientific reasoning
+- Early-stage research prototype for marine AI systems
+
+---
+
+## 🚀 Future Improvements
+
+- Vector-based document retrieval (Tier 3)
+- FastAPI deployment
+- Evaluation framework for retrieval accuracy
+- Integration with real Sentinel-2 datasets
+
+---
+
+## 📌 Status
+
+This is an **active research prototype**, designed for experimentation in ecological AI systems and GraphRAG architectures.

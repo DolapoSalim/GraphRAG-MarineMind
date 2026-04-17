@@ -1,0 +1,14 @@
+[
+  {
+    "query": "What methods estimate seagrass extent?",
+    "expected_concepts": ["Sentinel-2", "Satellite_imagery", "seagrass_extent"]
+  },
+  {
+    "query": "What affects seagrass health?",
+    "expected_concepts": ["temperature_increase", "eutrophication", "human_activity"]
+  },
+  {
+    "query": "What indicates ecosystem health?",
+    "expected_concepts": ["seagrass_extent", "biodiversity"]
+  }
+]

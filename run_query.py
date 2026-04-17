@@ -1,7 +1,8 @@
 from src.graph.query_engine import GraphQueryEngine
-from src.rag.generator import OllamaGenerator
-from src.router.query_router import QueryRouter
 from src.stats.stats_engine import StatsEngine
+from src.rag.generator import OllamaGenerator
+from src.rag.context_builder import ContextBuilder
+from src.router.query_router import QueryRouter
 
 
 def main():
@@ -9,8 +10,9 @@ def main():
     stats_engine = StatsEngine("data/stats.json")
     llm = OllamaGenerator(model="phi3:mini")
     router = QueryRouter()
+    builder = ContextBuilder()
 
-    print("\n Welcome to GraphRAG MarineMind")
+    print("\nWelcome to GraphRAG MarineMind (Unified System)")
     print("Type 'exit' to quit\n")
 
     while True:
@@ -20,43 +22,40 @@ def main():
             break
 
         # -------------------
-        # Tier 1: Graph
+        # Tier 1
         # -------------------
         graph_results = graph_engine.query(query)
 
         # -------------------
-        # Tier 2: Stats
+        # Tier 2
         # -------------------
         stats_results = stats_engine.query(query)
 
-        print("\n Tier 1 (Graph):")
-        for r in graph_results:
-            print(f"- {r}")
+        # -------------------
+        # Build unified context
+        # -------------------
+        context = builder.build(graph_results, stats_results)
 
-        print("\n Tier 2 (Stats):")
-        for r in stats_results:
-            print(f"- {r}")
+        print("\n Unified Context:")
+        print(context)
 
         # -------------------
-        # Router decision
+        # Routing decision
         # -------------------
         decision = router.route(query, graph_results)
 
-        print(f"\n Router decision: {decision}")
+        print(f"\nRouter decision: {decision}")
 
         # -------------------
         # LLM reasoning
         # -------------------
         if decision == "graph_only":
-            print("\n Answer (Graph Only):")
+            print("\nAnswer (Graph Only):")
             print("\n".join(graph_results))
 
         else:
-            answer = llm.generate_answer(
-                query,
-                graph_results + stats_results
-            )
-            print("\n Final Answer:")
+            answer = llm.generate_answer(query, context)
+            print("\nFinal Answer:")
             print(answer)
 
         print("\n" + "-" * 60 + "\n")
