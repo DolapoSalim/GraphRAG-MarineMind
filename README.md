@@ -113,3 +113,45 @@ This project demonstrates:
 ## 📌 Status
 
 This is an **active research prototype**, designed for experimentation in ecological AI systems and GraphRAG architectures.
+
+## Architecture
+                        ┌────────────────────────────┐
+                        │        User Query          │
+                        └────────────┬───────────────┘
+                                     │
+                                     ▼
+                        ┌────────────────────────────┐
+                        │      Query Router          │
+                        │ (Intent Detection Layer)   │
+                        └────────────┬───────────────┘
+                                     │
+            ┌────────────────────────┼────────────────────────┐
+            │                        │                        │
+            ▼                        ▼                        ▼
+┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
+│   Tier 1: Graph    │   │   Tier 2: Stats    │   │  Tier 3: Documents │
+│  Knowledge Engine  │   │  Statistical Layer │   │  (Future Vector DB)│
+│                    │   │                    │   │                    │
+│ - Relationships    │   │ - Trends           │   │ - PDFs             │
+│ - Methods          │   │ - Drivers          │   │ - Literature       │
+│ - Ecological Links │   │ - Indicators       │   │ - Embeddings       │
+└─────────┬──────────┘   └─────────┬──────────┘   └─────────┬──────────┘
+          │                        │                        │
+          └──────────────┬─────────┴──────────────┬─────────┘
+                         ▼                        ▼
+                ┌────────────────────────────────────┐
+                │     Context Aggregation Layer      │
+                │ (Unified Ecological Knowledge)     │
+                └────────────────────────────────────┘
+                                   │
+                                   ▼
+                ┌────────────────────────────────────┐
+                │     Local LLM (Phi-3 / Ollama)     │
+                │  Grounded Scientific Explanation   │
+                └────────────────────────────────────┘
+                                   │
+                                   ▼
+                        ┌────────────────────────────┐
+                        │       Final Answer         │
+                        │  (Structured + Grounded)   │
+                        └────────────────────────────┘
