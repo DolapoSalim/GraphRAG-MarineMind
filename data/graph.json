@@ -1,0 +1,268 @@
+[
+  {
+    "subject": "Photogrammetry",
+    "predicate": "reconstructs",
+    "object": "3D_structure",
+    "context": "high_resolution",
+    "source": "paper_1"
+  },
+  {
+    "subject": "Photogrammetry",
+    "predicate": "measures",
+    "object": "habitat_complexity",
+    "context": "rugosity_metrics",
+    "source": "paper_1"
+  },
+  {
+    "subject": "Photogrammetry",
+    "predicate": "has_accuracy",
+    "object": "high",
+    "context": "controlled_conditions",
+    "source": "paper_1"
+  },
+  {
+    "subject": "Photogrammetry",
+    "predicate": "depends_on",
+    "object": "image_overlap",
+    "context": "data_quality",
+    "source": "paper_1"
+  },
+  {
+    "subject": "Photogrammetry",
+    "predicate": "depends_on",
+    "object": "camera_calibration",
+    "context": "accuracy_requirement",
+    "source": "paper_1"
+  },
+  {
+    "subject": "Structure_from_Motion",
+    "predicate": "reconstructs",
+    "object": "3D_models",
+    "context": "from_2D_images",
+    "source": "paper_2"
+  },
+  {
+    "subject": "Structure_from_Motion",
+    "predicate": "integrates_with",
+    "object": "geospatial_tools",
+    "context": "mapping_workflows",
+    "source": "paper_2"
+  },
+  {
+    "subject": "Structure_from_Motion",
+    "predicate": "supports",
+    "object": "temporal_monitoring",
+    "context": "change_detection",
+    "source": "paper_2"
+  },
+  {
+    "subject": "Structure_from_Motion",
+    "predicate": "requires",
+    "object": "overlapping_images",
+    "context": "data_collection",
+    "source": "paper_2"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "estimates",
+    "object": "species_abundance",
+    "context": "biodiversity_monitoring",
+    "source": "paper_3"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "estimates",
+    "object": "species_richness",
+    "context": "community_structure",
+    "source": "paper_3"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "is",
+    "object": "non_destructive",
+    "context": "sampling_method",
+    "source": "paper_3"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "is",
+    "object": "repeatable",
+    "context": "long_term_monitoring",
+    "source": "paper_3"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "limited_by",
+    "object": "visibility",
+    "context": "water_conditions",
+    "source": "paper_3"
+  },
+  {
+    "subject": "Underwater_video",
+    "predicate": "affected_by",
+    "object": "observer_bias",
+    "context": "data_interpretation",
+    "source": "paper_3"
+  },
+  {
+    "subject": "BRUVS",
+    "predicate": "estimates",
+    "object": "fish_abundance",
+    "context": "baited_video_system",
+    "source": "paper_4"
+  },
+  {
+    "subject": "BRUVS",
+    "predicate": "detects",
+    "object": "species_presence",
+    "context": "video_analysis",
+    "source": "paper_4"
+  },
+  {
+    "subject": "Stereo_video",
+    "predicate": "measures",
+    "object": "organism_size",
+    "context": "length_estimation",
+    "source": "paper_4"
+  },
+  {
+    "subject": "BRUVS",
+    "predicate": "improves",
+    "object": "data_standardization",
+    "context": "reproducibility",
+    "source": "paper_4"
+  },
+  {
+    "subject": "BRUVS",
+    "predicate": "affected_by",
+    "object": "bait_use",
+    "context": "sampling_bias",
+    "source": "paper_4"
+  },
+  {
+    "subject": "Satellite_imagery",
+    "predicate": "enables",
+    "object": "large_scale_monitoring",
+    "context": "marine_ecosystems",
+    "source": "paper_5"
+  },
+  {
+    "subject": "Satellite_imagery",
+    "predicate": "estimates",
+    "object": "benthic_cover",
+    "context": "reef_mapping",
+    "source": "paper_5"
+  },
+  {
+    "subject": "Satellite_imagery",
+    "predicate": "limited_by",
+    "object": "water_depth",
+    "context": "optical_constraints",
+    "source": "paper_5"
+  },
+  {
+    "subject": "Satellite_imagery",
+    "predicate": "limited_by",
+    "object": "turbidity",
+    "context": "water_clarity",
+    "source": "paper_5"
+  },
+  {
+    "subject": "Satellite_imagery",
+    "predicate": "requires",
+    "object": "correction_algorithms",
+    "context": "data_processing",
+    "source": "paper_5"
+  },
+  {
+    "subject": "Sentinel_2",
+    "predicate": "detects",
+    "object": "seagrass_extent",
+    "context": "multi_temporal_analysis",
+    "source": "paper_6"
+  },
+  {
+    "subject": "Sentinel_2",
+    "predicate": "supports",
+    "object": "change_detection",
+    "context": "time_series",
+    "source": "paper_6"
+  },
+  {
+    "subject": "Sentinel_2",
+    "predicate": "has_resolution",
+    "object": "10m",
+    "context": "spatial_limit",
+    "source": "paper_6"
+  },
+  {
+    "subject": "Sentinel_2",
+    "predicate": "limited_by",
+    "object": "water_clarity",
+    "context": "optical_sensor",
+    "source": "paper_6"
+  },
+  {
+    "subject": "Ecological_observation_variables",
+    "predicate": "include",
+    "object": "biomass",
+    "context": "ecosystem_monitoring",
+    "source": "paper_7"
+  },
+  {
+    "subject": "Ecological_observation_variables",
+    "predicate": "include",
+    "object": "coverage",
+    "context": "habitat_extent",
+    "source": "paper_7"
+  },
+  {
+    "subject": "Ecological_observation_variables",
+    "predicate": "include",
+    "object": "species_composition",
+    "context": "biodiversity",
+    "source": "paper_7"
+  },
+  {
+    "subject": "Imaging_technologies",
+    "predicate": "support",
+    "object": "EOV_extraction",
+    "context": "monitoring_framework",
+    "source": "paper_7"
+  },
+  {
+    "subject": "Seagrass_extent",
+    "predicate": "indicates",
+    "object": "ecosystem_health",
+    "context": "coastal_systems",
+    "source": "paper_8"
+  },
+  {
+    "subject": "Temperature_increase",
+    "predicate": "causes",
+    "object": "seagrass_decline",
+    "context": "climate_stress",
+    "source": "paper_8"
+  },
+  {
+    "subject": "Eutrophication",
+    "predicate": "causes",
+    "object": "seagrass_decline",
+    "context": "nutrient_enrichment",
+    "source": "paper_8"
+  },
+  {
+    "subject": "Human_activity",
+    "predicate": "impacts",
+    "object": "seagrass_ecosystems",
+    "context": "coastal_pressure",
+    "source": "paper_8"
+  },
+  {
+    "subject": "Seagrass_loss",
+    "predicate": "reduces",
+    "object": "biodiversity",
+    "context": "ecosystem_impact",
+    "source": "paper_8"
+  }
+]
