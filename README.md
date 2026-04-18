@@ -1,22 +1,22 @@
-# 🌊 GraphRAG-MarineMind
+# GraphRAG-MarineMind
 
 A lightweight **GraphRAG-based ecological reasoning system** for analyzing marine ecosystem dynamics using structured knowledge graphs, statistical ecological indicators, and local LLM reasoning.
 
 ---
 
-## 🧠 Overview
+## Overview
 
 GraphRAG-MarineMind is a multi-layer retrieval-augmented generation system designed for **marine ecology analysis**, combining:
 
-- 🟢 Knowledge Graph (structured ecological relationships)
-- 🟡 Statistical Layer (ecological trends & drivers)
-- 🧠 Local LLM reasoning (Phi-3 via Ollama)
+-  Knowledge Graph (structured ecological relationships)
+-  Statistical Layer (ecological trends & drivers)
+-  Local LLM reasoning (Phi-3 via Ollama)
 
 The system enables grounded ecological Q&A using structured environmental knowledge.
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 User Query
 ↓
 Graph Retrieval (Tier 1)
@@ -32,9 +32,9 @@ Scientific Answer
 
 ---
 
-## 📊 System Components
+##  System Components
 
-### 🟢 Tier 1 — Knowledge Graph
+###  Tier 1 — Knowledge Graph
 Captures ecological relationships such as:
 
 - Sentinel-2 → detects → seagrass_extent  
@@ -43,7 +43,7 @@ Captures ecological relationships such as:
 
 ---
 
-### 🟡 Tier 2 — Ecological Statistics Layer
+### Tier 2 — Ecological Statistics Layer
 Represents ecological trends and drivers:
 
 - seagrass_extent → declining  
@@ -52,7 +52,7 @@ Represents ecological trends and drivers:
 
 ---
 
-### 🧠 LLM Layer (Phi-3 via Ollama)
+### LLM Layer (Phi-3 via Ollama)
 Used to:
 - interpret retrieved ecological knowledge
 - generate structured scientific explanations
@@ -60,7 +60,7 @@ Used to:
 
 ---
 
-## ⚙️ Features
+## Features
 
 - Fully local LLM inference (Ollama + Phi-3)
 - Graph-based ecological reasoning
@@ -70,7 +70,7 @@ Used to:
 
 ---
 
-## 🔬 Example Query
+## Example Query
 
 **Input:**
 > What methods estimate seagrass extent?
@@ -82,7 +82,7 @@ Used to:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - Python
 - Ollama (Phi-3 Mini)
@@ -91,7 +91,7 @@ Used to:
 
 ---
 
-## 🎯 Purpose
+## Purpose
 
 This project demonstrates:
 - Hybrid Graph + Statistical RAG design
@@ -101,7 +101,7 @@ This project demonstrates:
 
 ---
 
-## 🚀 Future Improvements
+## Future Improvements
 
 - Vector-based document retrieval (Tier 3)
 - FastAPI deployment
@@ -110,7 +110,7 @@ This project demonstrates:
 
 ---
 
-## 📌 Status
+## Status
 
 This is an **active research prototype**, designed for experimentation in ecological AI systems and GraphRAG architectures.
 
