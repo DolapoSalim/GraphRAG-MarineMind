@@ -128,30 +128,30 @@ This is an **active research prototype**, designed for experimentation in ecolog
             ┌────────────────────────┼────────────────────────┐
             │                        │                        │
             ▼                        ▼                        ▼
-┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
-│   Tier 1: Graph    │   │   Tier 2: Stats    │   │  Tier 3: Documents │
-│  Knowledge Engine  │   │  Statistical Layer │   │  (Future Vector DB)│
-│                    │   │                    │   │                    │
-│ - Relationships    │   │ - Trends           │   │ - PDFs             │
-│ - Methods          │   │ - Drivers          │   │ - Literature       │
-│ - Ecological Links │   │ - Indicators       │   │ - Embeddings       │
-└─────────┬──────────┘   └─────────┬──────────┘   └─────────┬──────────┘
-          │                        │                        │
-          └──────────────┬─────────┴──────────────┬─────────┘
-                         ▼                        ▼
-                ┌────────────────────────────────────┐
-                │     Context Aggregation Layer      │
-                │ (Unified Ecological Knowledge)     │
-                └────────────────────────────────────┘
-                                   │
-                                   ▼
-                ┌────────────────────────────────────┐
-                │     Local LLM (Phi-3 / Ollama)     │
-                │  Grounded Scientific Explanation   │
-                └────────────────────────────────────┘
-                                   │
-                                   ▼
-                        ┌────────────────────────────┐
-                        │       Final Answer         │
-                        │  (Structured + Grounded)   │
-                        └────────────────────────────┘
+        ┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
+        │   Tier 1: Graph    │   │   Tier 2: Stats    │   │  Tier 3:Documents
+        │  Knowledge Engine  │   │  Statistical Layer │   │  (Future Vector DB)│
+        │                    │   │                    │   │                    │
+        │ - Relationships    │   │ - Trends           │   │ - PDFs             │
+        │ - Methods          │   │ - Drivers          │   │ - Literature       │
+        │ - Ecological Links │   │ - Indicators       │   │ - Embeddings       │
+        └─────────┬──────────┘   └─────────┬──────────┘   └─────────┬──────────┘
+                  │                        │                        │
+                  └───────────────┬────────┴──────────────┬─────────┘
+                                  ▼                       ▼
+                        ┌────────────────────────────────────┐
+                        │     Context Aggregation Layer      │
+                        │ (Unified Ecological Knowledge)     │
+                        └────────────────────────────────────┘
+                                           │
+                                           ▼
+                        ┌────────────────────────────────────┐
+                        │     Local LLM (Phi-3 / Ollama)     │
+                        │  Grounded Scientific Explanation   │
+                        └────────────────────────────────────┘
+                                           │
+                                           ▼
+                            ┌────────────────────────────┐
+                            │       Final Answer         │
+                            │  (Structured + Grounded)   │
+                            └────────────────────────────┘

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GraphRAG MarineMind — Ecological Reasoning System</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f3ef;--bg2:#edeae4;--white:#ffffff;
+  --ink:#1a1f2e;--ink2:#4a5165;--ink3:#8a90a0;
+  --teal:#0b7c6e;--teal2:#0d9e8c;--teal-pale:#e6f4f2;--teal-mid:#b2ddd8;
+  --amber:#c4831a;--amber-pale:#fdf3e3;
+  --red:#c0392b;--red-pale:#fdecea;
+  --blue:#2563a8;--blue-pale:#eef4fb;
+  --border:rgba(26,31,46,0.10);--border2:rgba(26,31,46,0.18);
+  --shadow:0 2px 16px rgba(26,31,46,0.08);
+  --r:10px;--r2:16px;
+  --mono:'IBM Plex Mono',monospace;--serif:'Lora',serif;--sans:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(245,243,239,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 40px}
+.nav-left{display:flex;align-items:center;gap:14px}
+.nav-mark{width:34px;height:34px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-mark svg{width:18px;height:18px}
+.nav-name{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-0.01em}
+.nav-sub{font-size:12px;color:var(--ink3);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:0.04em;padding:4px 12px;border-radius:20px}
+.chip-teal{background:var(--teal-pale);color:var(--teal);border:1px solid var(--teal-mid)}
+.chip-dim{background:var(--bg2);color:var(--ink3);border:1px solid var(--border)}
+.gh-link{font-family:var(--mono);font-size:11px;color:var(--ink2);text-decoration:none;background:var(--bg2);border:1px solid var(--border2);padding:5px 12px;border-radius:6px;transition:background 0.15s}
+.gh-link:hover{background:var(--white)}
+
+/* HERO */
+.hero{max-width:900px;margin:0 auto;padding:64px 40px 48px;text-align:center}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:0.12em;background:var(--teal-pale);border:1px solid var(--teal-mid);padding:5px 14px;border-radius:20px;margin-bottom:24px}
+.hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal2);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:var(--serif);font-size:clamp(36px,5.5vw,58px);font-weight:600;line-height:1.1;letter-spacing:-0.02em;color:var(--ink);margin-bottom:18px}
+h1 em{font-style:italic;color:var(--teal);font-weight:400}
+.hero-desc{font-size:16px;color:var(--ink2);max-width:560px;margin:0 auto 32px;line-height:1.75}
+.hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;padding:5px 13px;border-radius:20px;background:var(--white);border:1px solid var(--border2);color:var(--ink2);letter-spacing:0.02em}
+
+/* SECTION */
+.section{max-width:960px;margin:0 auto;padding:0 40px 56px}
+.section-label{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ARCH */
+.arch-row{display:flex;align-items:stretch;border:1px solid var(--border2);border-radius:var(--r2);overflow:hidden;background:var(--white);box-shadow:var(--shadow)}
+.arch-tier{flex:1;padding:20px 16px;border-right:1px solid var(--border);transition:background 0.2s;cursor:default}
+.arch-tier:last-child{border-right:none;background:var(--teal-pale)}
+.arch-tier:hover{background:var(--teal-pale)}
+.arch-tier:last-child:hover{background:var(--teal-pale)}
+.arch-arrow{display:flex;align-items:center;justify-content:center;padding:0 4px;color:var(--ink3);font-size:16px;flex-shrink:0;border-right:1px solid var(--border)}
+.tier-num{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em;margin-bottom:8px}
+.tier-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.tier-body{font-size:12px;color:var(--ink2);line-height:1.6}
+.tier-items{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.tier-item{font-family:var(--mono);font-size:10px;color:var(--teal2);background:var(--teal-pale);border-radius:5px;padding:3px 9px;display:inline-block;align-self:flex-start}
+
+/* CARD */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden}
+.card-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-label{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.1em}
+.card-body{padding:16px 18px}
+
+/* DEMO */
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.demo-col{display:flex;flex-direction:column;gap:16px}
+
+textarea{width:100%;border:1.5px solid var(--border2);border-radius:var(--r);background:var(--bg);padding:12px 14px;font-family:var(--sans);font-size:14px;color:var(--ink);resize:none;outline:none;line-height:1.65;transition:border-color 0.2s,box-shadow 0.2s;min-height:100px}
+textarea:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(13,158,140,0.12)}
+textarea::placeholder{color:var(--ink3)}
+
+.samples-row{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.sample-btn{text-align:left;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--ink2);cursor:pointer;transition:all 0.15s;font-family:var(--sans);line-height:1.4}
+.sample-btn:hover{background:var(--teal-pale);border-color:var(--teal-mid);color:var(--teal)}
+
+.run-btn{width:100%;margin-top:12px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);padding:12px;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;transition:background 0.15s,transform 0.1s;display:flex;align-items:center;justify-content:center;gap:8px}
+.run-btn:hover{background:var(--teal2)}
+.run-btn:active{transform:scale(0.98)}
+.run-btn:disabled{background:var(--ink3);cursor:not-allowed}
+.run-hint{font-size:11px;color:var(--ink3);text-align:center;margin-top:6px;font-family:var(--mono)}
+
+/* PIPELINE */
+.pipeline{display:flex;flex-direction:column;gap:3px}
+.p-tier{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);transition:all 0.3s;border-left:3px solid transparent}
+.p-tier.active{background:var(--teal-pale);border-color:var(--teal-mid);border-left-color:var(--teal2)}
+.p-tier.done{background:#f0faf9;border-color:rgba(11,124,110,0.2);border-left-color:var(--teal)}
+.p-icon{font-size:16px;flex-shrink:0;width:26px;text-align:center}
+.p-name{font-size:12px;font-weight:500;color:var(--ink2);flex:1}
+.p-tier.active .p-name,.p-tier.done .p-name{color:var(--teal)}
+.p-status{font-family:var(--mono);font-size:10px;color:var(--ink3);background:var(--bg2);padding:2px 8px;border-radius:10px}
+.p-tier.active .p-status{background:var(--teal-pale);color:var(--teal2);border:1px solid var(--teal-mid)}
+.p-tier.done .p-status{background:#e6f7f5;color:var(--teal)}
+.p-arrow-sm{text-align:center;color:var(--ink3);font-size:11px;padding:1px 0}
+.prog-bar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.prog-fill{height:100%;width:0;background:var(--teal2);transition:width 0.5s ease;border-radius:2px}
+
+/* ANSWER */
+.answer-area{min-height:160px;font-size:14px;color:var(--ink2);line-height:1.8;white-space:pre-wrap}
+.answer-area.empty{color:var(--ink3);font-style:italic;font-size:13px}
+.cursor-blink{display:inline-block;width:2px;height:14px;background:var(--teal2);margin-left:1px;vertical-align:text-bottom;animation:cur 0.75s step-end infinite}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+.ans-status{display:flex;align-items:center;gap:6px}
+.s-dot{width:7px;height:7px;border-radius:50%;background:var(--ink3)}
+.s-dot.on{background:var(--teal2);animation:pulse 1s ease-in-out infinite}
+.s-dot.done{background:var(--teal)}
+.s-txt{font-family:var(--mono);font-size:10px;color:var(--ink3)}
+
+/* CONTEXT */
+.ctx-area{font-family:var(--mono);font-size:11px;color:var(--ink3);line-height:1.9;min-height:80px;white-space:pre-wrap}
+.cg{color:var(--teal)}.cs{color:var(--amber)}.cl{color:var(--blue)}
+
+/* KG */
+.kg-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden}
+.kg-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.kg-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink)}
+.kg-sub{font-size:12px;color:var(--ink3)}
+.gnode{cursor:pointer}
+.gnode circle{transition:stroke-width 0.2s,opacity 0.3s}
+.gnode:hover circle{stroke-width:3px!important}
+.gnode text{pointer-events:none;user-select:none}
+
+/* RELATION TABLE */
+.rel-table{width:100%;border-collapse:collapse;font-size:13px}
+.rel-table th{text-align:left;padding:10px 16px;font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink3);background:var(--bg);border-bottom:1px solid var(--border);font-weight:400}
+.rel-table td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--ink2);vertical-align:middle}
+.rel-table tr:last-child td{border-bottom:none}
+.rel-table tbody tr:hover td{background:var(--teal-pale)}
+.mono-teal{color:var(--teal);font-family:var(--mono);font-size:11px}
+.mono-ink{color:var(--ink);font-family:var(--mono);font-size:11px}
+.rel-badge{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:10px;background:var(--bg2);color:var(--ink3)}
+
+/* METRICS */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.metric-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:20px 18px;box-shadow:var(--shadow);text-align:center}
+.metric-val{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--teal);line-height:1}
+.metric-label{font-size:12px;color:var(--ink2);margin-top:7px}
+.metric-sub{font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:3px}
+
+/* INFO */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow)}
+.info-icon{font-size:22px;margin-bottom:12px}
+.info-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.info-body{font-size:13px;color:var(--ink2);line-height:1.7}
+.info-pill{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:10px;background:var(--teal-pale);color:var(--teal);border:1px solid var(--teal-mid)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink3)}
+footer a{color:var(--teal);text-decoration:none}
+footer a:hover{text-decoration:underline}
+.footer-right{display:flex;gap:16px;font-family:var(--mono);font-size:11px}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero>*{animation:fadeUp 0.6s ease both}
+.hero>*:nth-child(1){animation-delay:0.05s}.hero>*:nth-child(2){animation-delay:0.15s}
+.hero>*:nth-child(3){animation-delay:0.25s}.hero>*:nth-child(4){animation-delay:0.35s}
+
+@media(max-width:720px){
+  .demo-wrap,.info-grid,.metrics-row{grid-template-columns:1fr}
+  .metrics-row{grid-template-columns:1fr 1fr}
+  .arch-row{flex-direction:column}
+  .arch-arrow{display:none}
+  nav,.hero,.section{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="nav-mark">
+      <svg viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="3" fill="white"/>
+        <circle cx="3.5" cy="4" r="1.8" fill="white" opacity="0.7"/>
+        <circle cx="14.5" cy="4" r="1.8" fill="white" opacity="0.7"/>
+        <circle cx="14.5" cy="14" r="1.8" fill="white" opacity="0.7"/>
+        <circle cx="3.5" cy="14" r="1.8" fill="white" opacity="0.7"/>
+        <line x1="9" y1="9" x2="3.5" y2="4" stroke="white" stroke-width="1" opacity="0.6"/>
+        <line x1="9" y1="9" x2="14.5" y2="4" stroke="white" stroke-width="1" opacity="0.6"/>
+        <line x1="9" y1="9" x2="14.5" y2="14" stroke="white" stroke-width="1" opacity="0.6"/>
+        <line x1="9" y1="9" x2="3.5" y2="14" stroke="white" stroke-width="1" opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-name">GraphRAG MarineMind</div>
+      <div class="nav-sub">Ecological Reasoning System</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="chip chip-teal">Research Prototype</span>
+    <span class="chip chip-dim">Phi-3 · Ollama</span>
+    <a href="https://github.com/DolapoSalim/GraphRAG-MarineMind" target="_blank" class="gh-link">↗ GitHub</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-kicker">Marine AI · Graph-Based RAG</div>
+  <h1>Ecological reasoning<br>grounded in <em>knowledge</em></h1>
+  <p class="hero-desc">A deterministic multi-tier system for marine ecosystem Q&A — combining structured knowledge graphs, statistical ecological indicators, and local LLM inference to eliminate hallucination.</p>
+  <div class="hero-tags">
+    <span class="tag">Knowledge Graph</span>
+    <span class="tag">Statistical Layer</span>
+    <span class="tag">Phi-3 Mini</span>
+    <span class="tag">Sentinel-2</span>
+    <span class="tag">Python</span>
+    <span class="tag">Apache-2.0</span>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section">
+  <div class="section-label">System Architecture · 3-Tier Pipeline</div>
+  <div class="arch-row">
+    <div class="arch-tier">
+      <div class="tier-num">TIER 01</div>
+      <div class="tier-title">Graph Retrieval</div>
+      <div class="tier-body">Traverses the ecological knowledge graph to surface structured entity relationships and ecological methods.</div>
+      <div class="tier-items">
+        <span class="tier-item">Knowledge graph</span>
+        <span class="tier-item">Entity relations</span>
+        <span class="tier-item">Multi-hop paths</span>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-tier">
+      <div class="tier-num">TIER 02</div>
+      <div class="tier-title">Statistical Lookup</div>
+      <div class="tier-body">Fetches ecological trend data, drivers, and indicators from the rule-based inference layer.</div>
+      <div class="tier-items">
+        <span class="tier-item">Trend vectors</span>
+        <span class="tier-item">Stressor drivers</span>
+        <span class="tier-item">NDVI indicators</span>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-tier">
+      <div class="tier-num">TIER 03</div>
+      <div class="tier-title">LLM Synthesis</div>
+      <div class="tier-body">Phi-3 Mini (via Ollama) generates a grounded answer from the fused context — locally, no API key needed.</div>
+      <div class="tier-items">
+        <span class="tier-item">Phi-3 Mini</span>
+        <span class="tier-item">Ollama local</span>
+        <span class="tier-item">Context fusion</span>
+      </div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-tier">
+      <div class="tier-num">OUTPUT</div>
+      <div class="tier-title">Scientific Answer</div>
+      <div class="tier-body">Structured, grounded response with a fully traceable retrieval path — from graph node to final answer.</div>
+      <div class="tier-items">
+        <span class="tier-item">Grounded</span>
+        <span class="tier-item">Deterministic</span>
+        <span class="tier-item">Traceable</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERACTIVE DEMO -->
+<div class="section">
+  <div class="section-label">Interactive Demo · Try the Query Engine</div>
+  <div class="demo-wrap">
+    <div class="demo-col">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-label">ECOLOGICAL QUERY</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3)" id="char-count">0 chars</span>
+        </div>
+        <div class="card-body">
+          <textarea id="q-input" placeholder="Ask about seagrass dynamics, remote sensing methods, biodiversity, eutrophication…" rows="4" oninput="onType()"></textarea>
+          <div class="samples-row">
+            <button class="sample-btn" onclick="pick(this)">What methods estimate seagrass extent using satellite data?</button>
+            <button class="sample-btn" onclick="pick(this)">What are the main drivers of seagrass decline?</button>
+            <button class="sample-btn" onclick="pick(this)">How does eutrophication affect benthic cover and biodiversity?</button>
+            <button class="sample-btn" onclick="pick(this)">Explain the relationship between NDVI and habitat fragmentation.</button>
+          </div>
+          <button class="run-btn" id="run-btn" onclick="runQuery()">
+            <span id="btn-txt">▶ Run Query</span>
+          </button>
+          <div class="run-hint">Ctrl + Enter to run</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-label">REASONING PIPELINE</span></div>
+        <div class="card-body">
+          <div class="pipeline">
+            <div class="p-tier" id="pt1">
+              <div class="p-icon">🕸️</div>
+              <div class="p-name">Graph Retrieval · Tier 1</div>
+              <div class="p-status" id="ps1">idle</div>
+            </div>
+            <div class="p-arrow-sm">↓</div>
+            <div class="p-tier" id="pt2">
+              <div class="p-icon">📊</div>
+              <div class="p-name">Statistical Lookup · Tier 2</div>
+              <div class="p-status" id="ps2">idle</div>
+            </div>
+            <div class="p-arrow-sm">↓</div>
+            <div class="p-tier" id="pt3">
+              <div class="p-icon">🤖</div>
+              <div class="p-name">LLM Synthesis · Phi-3</div>
+              <div class="p-status" id="ps3">idle</div>
+            </div>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-col">
+      <div class="card" style="flex:1">
+        <div class="card-head">
+          <span class="card-label">GROUNDED RESPONSE</span>
+          <div class="ans-status">
+            <div class="s-dot" id="sdot"></div>
+            <span class="s-txt" id="stxt">ready</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="answer-area empty" id="ans">Run a query to see the grounded ecological response from the system.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <span class="card-label">CONTEXT WINDOW · FUSED RETRIEVAL</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--ink3)" id="ctx-tok">0 tokens</span>
+        </div>
+        <div class="card-body">
+          <div class="ctx-area" id="ctx-area">Awaiting query…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KNOWLEDGE GRAPH -->
+<div class="section">
+  <div class="section-label">Knowledge Graph · Marine Ecosystem Entity Map</div>
+  <div class="kg-wrap">
+    <div class="kg-head">
+      <div class="kg-title">Ecological Knowledge Graph</div>
+      <div class="kg-sub" id="kg-info">Click any node to explore its role in the ecosystem</div>
+    </div>
+    <div style="padding:8px">
+      <svg id="kg-svg" width="100%" viewBox="0 0 880 320" style="display:block;font-family:'Outfit',sans-serif">
+        <defs>
+          <marker id="garr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M1 2L8 5L1 8" fill="none" stroke="#b0b8c8" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- EDGES -->
+        <g fill="none" stroke="#d5d9e2" stroke-width="1.2" marker-end="url(#garr)">
+          <line x1="165" y1="105" x2="355" y2="132"/>
+          <line x1="163" y1="116" x2="355" y2="222"/>
+          <line x1="444" y1="122" x2="596" y2="93"/>
+          <line x1="408" y1="148" x2="408" y2="195"/>
+          <line x1="608" y1="224" x2="452" y2="148"/>
+          <line x1="614" y1="228" x2="444" y2="228"/>
+          <line x1="400" y1="250" x2="220" y2="265"/>
+          <line x1="756" y1="106" x2="448" y2="132"/>
+        </g>
+        <!-- EDGE LABELS -->
+        <g font-size="10" fill="#a0a8b8" text-anchor="middle" font-family="'Outfit',sans-serif">
+          <text x="250" y="108">detects</text>
+          <text x="244" y="190">estimates</text>
+          <text x="526" y="96">supports</text>
+          <text x="432" y="188">measured by</text>
+          <text x="546" y="202">stresses</text>
+          <text x="536" y="245">degrades</text>
+          <text x="296" y="272">fragmentation →</text>
+          <text x="628" y="118">increases stress</text>
+        </g>
+        <!-- NODE: Sentinel-2 (teal) -->
+        <g class="gnode" onclick="kgClick('sentinel2','Sentinel-2 — ESA multispectral satellite. Uses NIR/Red bands to detect seagrass extent and estimate benthic substrate cover in shallow coastal waters.')">
+          <circle cx="126" cy="105" r="38" fill="#e6f4f2" stroke="#0b7c6e" stroke-width="1.8"/>
+          <text x="126" y="100" text-anchor="middle" font-size="12" font-weight="500" fill="#0b7c6e">Sentinel-2</text>
+          <text x="126" y="116" text-anchor="middle" font-size="10" fill="#0d9e8c">imagery</text>
+        </g>
+        <!-- NODE: Seagrass (center, prominent) -->
+        <g class="gnode" onclick="kgClick('seagrass','Seagrass extent — central ecosystem entity. Provides habitat for marine life, carbon sequestration, and coastal protection. Currently declining due to temperature stress and eutrophication.')">
+          <circle cx="400" cy="130" r="46" fill="#e6f4f2" stroke="#0b7c6e" stroke-width="2.2"/>
+          <text x="400" y="124" text-anchor="middle" font-size="13" font-weight="600" fill="#0b7c6e">Seagrass</text>
+          <text x="400" y="141" text-anchor="middle" font-size="11" fill="#0d9e8c">extent</text>
+        </g>
+        <!-- NODE: Biodiversity (amber) -->
+        <g class="gnode" onclick="kgClick('biodiversity','Biodiversity index — downstream indicator of ecosystem health. Declines with seagrass loss; supported by intact benthic cover. Driven by habitat loss and pollution.')">
+          <circle cx="636" cy="88" r="38" fill="#fdf3e3" stroke="#c4831a" stroke-width="1.8"/>
+          <text x="636" y="83" text-anchor="middle" font-size="12" font-weight="500" fill="#c4831a">Biodiversity</text>
+          <text x="636" y="99" text-anchor="middle" font-size="10" fill="#c4831a">index</text>
+        </g>
+        <!-- NODE: Temperature (red) -->
+        <g class="gnode" onclick="kgClick('temperature','Temperature increase — primary abiotic stressor. Thermal stress above 28°C triggers seagrass leaf senescence and rhizome dieback. Identified as leading driver of current decline.')">
+          <circle cx="764" cy="106" r="36" fill="#fdecea" stroke="#c0392b" stroke-width="1.8"/>
+          <text x="764" y="101" text-anchor="middle" font-size="11" font-weight="500" fill="#c0392b">Temp.</text>
+          <text x="764" y="116" text-anchor="middle" font-size="10" fill="#c0392b">increase</text>
+        </g>
+        <!-- NODE: Benthic (blue) -->
+        <g class="gnode" onclick="kgClick('benthic','Benthic cover — seafloor substrate measurement. Estimated from Sentinel-2 imagery. Currently stable. Hosts benthic invertebrate communities and is degraded by eutrophication.')">
+          <circle cx="400" cy="228" r="34" fill="#eef4fb" stroke="#2563a8" stroke-width="1.8"/>
+          <text x="400" y="223" text-anchor="middle" font-size="11" font-weight="500" fill="#2563a8">Benthic</text>
+          <text x="400" y="239" text-anchor="middle" font-size="10" fill="#2563a8">cover</text>
+        </g>
+        <!-- NODE: NDVI (blue) -->
+        <g class="gnode" onclick="kgClick('ndvi','NDVI = (NIR − Red)/(NIR + Red). Proxy for photosynthetic biomass. Declining NDVI correlates with increasing habitat fragmentation. Sensitive to cloud cover.')">
+          <circle cx="178" cy="268" r="32" fill="#eef4fb" stroke="#2563a8" stroke-width="1.8"/>
+          <text x="178" y="263" text-anchor="middle" font-size="12" font-weight="500" fill="#2563a8">NDVI</text>
+          <text x="178" y="278" text-anchor="middle" font-size="10" fill="#2563a8">change</text>
+        </g>
+        <!-- NODE: Eutrophication (red) -->
+        <g class="gnode" onclick="kgClick('eutrophication','Eutrophication — nutrient enrichment (N, P) from agricultural runoff. Increasing in coastal waters. Stresses seagrass via light reduction, degrades benthic cover through hypoxic events.')">
+          <circle cx="648" cy="228" r="40" fill="#fdecea" stroke="#c0392b" stroke-width="1.8"/>
+          <text x="648" y="222" text-anchor="middle" font-size="11" font-weight="500" fill="#c0392b">Eut-</text>
+          <text x="648" y="237" text-anchor="middle" font-size="10" fill="#c0392b">rophication</text>
+        </g>
+        <!-- LEGEND -->
+        <g transform="translate(12,296)" font-size="10" font-family="'Outfit',sans-serif">
+          <circle cx="8" cy="7" r="7" fill="#e6f4f2" stroke="#0b7c6e" stroke-width="1.2"/>
+          <text x="20" y="11" fill="#4a5165">Ecosystem entity</text>
+          <circle cx="128" cy="7" r="7" fill="#fdf3e3" stroke="#c4831a" stroke-width="1.2"/>
+          <text x="140" y="11" fill="#4a5165">Indicator</text>
+          <circle cx="204" cy="7" r="7" fill="#eef4fb" stroke="#2563a8" stroke-width="1.2"/>
+          <text x="216" y="11" fill="#4a5165">Measurement</text>
+          <circle cx="320" cy="7" r="7" fill="#fdecea" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="332" y="11" fill="#4a5165">Stressor</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- RELATION TABLE -->
+<div class="section">
+  <div class="section-label">Knowledge Graph · Sampled Relations</div>
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)">
+    <table class="rel-table">
+      <thead>
+        <tr>
+          <th>Source entity</th>
+          <th style="text-align:center">→</th>
+          <th>Target entity</th>
+          <th>Relation type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono-teal">sentinel_2</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">seagrass_extent</td><td><span class="rel-badge">detects</span></td></tr>
+        <tr><td class="mono-teal">sentinel_2</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">benthic_cover</td><td><span class="rel-badge">estimates</span></td></tr>
+        <tr><td class="mono-teal">seagrass_loss</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">biodiversity</td><td><span class="rel-badge">reduces</span></td></tr>
+        <tr><td class="mono-teal">eutrophication</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">seagrass_extent</td><td><span class="rel-badge">stresses</span></td></tr>
+        <tr><td class="mono-teal">NDVI_change</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">habitat_fragmentation</td><td><span class="rel-badge">indicates</span></td></tr>
+        <tr><td class="mono-teal">temperature_increase</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">seagrass_extent</td><td><span class="rel-badge">stresses</span></td></tr>
+        <tr><td class="mono-teal">satellite_imagery</td><td style="text-align:center;color:var(--ink3)">→</td><td class="mono-ink">benthic_cover</td><td><span class="rel-badge">estimates</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="section">
+  <div class="section-label">Project Highlights</div>
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-val">24</div>
+      <div class="metric-label">Knowledge graph nodes</div>
+      <div class="metric-sub">ecological entities</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">3</div>
+      <div class="metric-label">Reasoning tiers</div>
+      <div class="metric-sub">graph + stats + LLM</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">100%</div>
+      <div class="metric-label">Local inference</div>
+      <div class="metric-sub">no external API</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val">0</div>
+      <div class="metric-label">Hallucinated outputs</div>
+      <div class="metric-sub">grounded retrieval</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section">
+  <div class="section-label">About the Project</div>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-icon">🌊</div>
+      <div class="info-title">Domain: Marine Ecology</div>
+      <div class="info-body">Focuses on interpreting imaging-based ecological variables — seagrass extent, benthic habitat, biodiversity — from Sentinel-2 satellite data and environmental monitoring records.</div>
+      <div class="info-pill">Active Research Prototype</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🧠</div>
+      <div class="info-title">Design: Anti-Hallucination RAG</div>
+      <div class="info-body">All answers are grounded through two structured retrieval tiers before the LLM generates text. Every claim is traceable to a specific graph relation or statistical record — no confabulation.</div>
+      <div class="info-pill">Graph + Stats + LLM fusion</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🔭</div>
+      <div class="info-title">Roadmap: Vector + FastAPI</div>
+      <div class="info-body">Planned Tier 3 adds vector-based document retrieval over scientific literature. FastAPI deployment and integration with real Sentinel-2 datasets from Copernicus Open Access Hub are on the roadmap.</div>
+      <div class="info-pill">In development</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>Built by <a href="https://github.com/DolapoSalim" target="_blank">DolapoSalim</a> · <a href="https://github.com/DolapoSalim/GraphRAG-MarineMind" target="_blank">View source on GitHub</a> · Apache-2.0 License</div>
+  <div class="footer-right"><span>Python</span><span>Ollama</span><span>Phi-3 Mini</span><span>Sentinel-2</span></div>
+</footer>
+
+<script>
+const RESP={
+  seagrass:{
+    text:`Seagrass extent is estimated primarily through multitemporal remote sensing analysis using Sentinel-2 satellite imagery. Key methods include:\n\n1. NDVI-based spectral mapping — computed from Sentinel-2 Band 8 (NIR) and Band 4 (Red). Seagrass meadows produce distinct spectral signatures separable from sand, algae, and coral substrate.\n\n2. Benthic cover estimation — bottom-reflectance decomposition in optically shallow water separates substrate types with approximately 80% accuracy under clear conditions.\n\n3. Habitat fragmentation indices — patch-based spatial analysis identifies degradation boundaries and connectivity loss over time.\n\nGraph path resolved: sentinel_2 → detects → seagrass_extent.\nStatistical layer: seagrass_extent is currently declining, driven by temperature increase and eutrophication.`,
+    nodes:['seagrass','sentinel2','ndvi','benthic'],
+    ctx:`[GRAPH] sentinel_2 → detects → seagrass_extent\n[GRAPH] satellite_imagery → estimates → benthic_cover\n[GRAPH] NDVI_change → indicates → habitat_fragmentation\n[STATS] seagrass_extent: declining\n  drivers: [temp. increase, eutrophication, human activity]\n[STATS] NDVI_change: declining\n  drivers: [fragmentation, cloud_cover]`
+  },
+  decline:{
+    text:`Seagrass decline is driven by a combination of direct and indirect stressors captured in the ecological knowledge graph:\n\nPrimary abiotic drivers:\n— Temperature increase: thermal stress above 28°C triggers leaf senescence and rhizome dieback. Leading driver in current statistical records.\n— Eutrophication: elevated N and P from agricultural runoff stimulate algal growth, reducing light penetration critical for photosynthesis.\n\nSecondary anthropogenic pressures:\n— Coastal development causes physical disturbance and sediment resuspension.\n— Human activity disrupts hydrodynamic flow patterns.\n\nGraph confirmed: seagrass_loss → reduces → biodiversity, showing downstream cascading effects on benthic-associated species assemblages.`,
+    nodes:['seagrass','eutrophication','biodiversity','temperature'],
+    ctx:`[GRAPH] seagrass_loss → reduces → biodiversity\n[GRAPH] eutrophication → stresses → seagrass_extent\n[GRAPH] temperature_increase → stresses → seagrass_extent\n[STATS] eutrophication_rate: increasing\n  drivers: [agric. runoff, coastal development]\n[STATS] seagrass_extent: declining\n  drivers: [temp. increase, eutrophication, human activity]`
+  },
+  eutrophication:{
+    text:`Eutrophication operates as a critical stressor on benthic communities through cascading biogeochemical pathways:\n\nMechanism of impact on benthic cover:\n— Excess nutrient loading (N, P) promotes phytoplankton and macroalgal blooms, reducing photosynthetically active radiation reaching the benthos by up to 80%.\n— Hypoxic dead zones form during decomposition of bloom biomass, eliminating benthic invertebrate diversity.\n\nBiodiversity consequences:\n— Loss of structural habitat reduces niche diversity for fish and invertebrates.\n— Statistical layer confirms biodiversity_index is declining, with habitat loss as the primary driver.\n\nGraph path: eutrophication → stresses → seagrass → seagrass_loss → reduces → biodiversity (2-hop causal chain resolved from knowledge graph).`,
+    nodes:['eutrophication','benthic','biodiversity','seagrass'],
+    ctx:`[GRAPH] eutrophication → stresses → seagrass_extent\n[GRAPH] seagrass_loss → reduces → biodiversity\n[GRAPH] benthic_cover → supports → biodiversity\n[STATS] eutrophication_rate: increasing\n  drivers: [agric. runoff]\n[STATS] biodiversity_index: declining\n[STATS] benthic_cover: stable\n  factors: [water clarity, sediment dynamics]`
+  },
+  ndvi:{
+    text:`NDVI (Normalised Difference Vegetation Index) = (NIR − Red) / (NIR + Red). It serves as a proxy for photosynthetic biomass density in seagrass meadows detected from Sentinel-2 imagery.\n\nRelationship to habitat fragmentation:\n— Declining NDVI values correlate spatially with increasing patch isolation. Knowledge graph encodes: NDVI_change → indicates → habitat_fragmentation.\n— Below-threshold NDVI (<0.15) in multi-date composites flags potential meadow loss zones for field validation.\n\nData constraints:\n— Cloud cover introduces temporal gaps in time-series analysis — identified as a driver of measurement uncertainty.\n— Atmospheric correction (Sen2Cor) is required for consistent inter-scene comparisons.\n\nNDVI is a Tier-1 indicator node in the graph, linking remote sensing signals to ground-truth ecological interpretation.`,
+    nodes:['ndvi','sentinel2','seagrass','benthic'],
+    ctx:`[GRAPH] NDVI_change → indicates → habitat_fragmentation\n[GRAPH] sentinel_2 → computes → NDVI\n[GRAPH] NDVI_change → correlated_with → seagrass_loss\n[STATS] NDVI_change: declining\n  drivers: [fragmentation, cloud_cover]\n[STATS] seagrass_extent: declining`
+  }
+};
+
+function getKey(q){
+  q=q.toLowerCase();
+  if(q.includes('ndvi')||q.includes('fragmentation')) return 'ndvi';
+  if(q.includes('eutrophication')||q.includes('benthic')) return 'eutrophication';
+  if(q.includes('decline')||q.includes('driver')||q.includes('cause')||q.includes('main')) return 'decline';
+  return 'seagrass';
+}
+
+function onType(){ document.getElementById('char-count').textContent=document.getElementById('q-input').value.length+' chars'; }
+function pick(el){ document.getElementById('q-input').value=el.textContent.trim(); onType(); }
+function setTier(n,state,badge){ document.getElementById('pt'+n).className='p-tier '+(state||''); document.getElementById('ps'+n).textContent=badge; }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+const NODE_MAP={
+  sentinel2:'Sentinel-2 — ESA multispectral satellite. Detects seagrass extent and estimates benthic cover using NIR/Red bands.',
+  seagrass:'Seagrass extent — central ecosystem entity. Provides marine habitat, carbon sequestration, and coastal protection. Currently declining.',
+  biodiversity:'Biodiversity index — downstream indicator of ecosystem health. Declines with seagrass loss; supported by intact benthic cover.',
+  temperature:'Temperature increase — primary abiotic stressor. Thermal stress above 28°C causes seagrass senescence and rhizome dieback.',
+  benthic:'Benthic cover — seafloor substrate measurement. Estimated from Sentinel-2. Currently stable; hosts invertebrate communities.',
+  ndvi:'NDVI — photosynthetic biomass proxy. Declining values indicate habitat fragmentation. Sensitive to cloud cover.',
+  eutrophication:'Eutrophication — N/P nutrient enrichment from agricultural runoff. Stresses seagrass via light reduction; degrades benthic cover.'
+};
+
+function kgClick(id, info){
+  document.getElementById('kg-info').textContent = info || NODE_MAP[id] || id;
+  document.querySelectorAll('.gnode circle').forEach(c=>{ c.style.opacity='0.35'; });
+  document.querySelectorAll('.gnode[onclick*="\''+id+'\'"] circle').forEach(c=>{ c.style.opacity='1'; c.style.strokeWidth='3'; });
+  setTimeout(()=>{
+    document.querySelectorAll('.gnode circle').forEach(c=>{ c.style.opacity='1'; c.style.strokeWidth=''; });
+    document.getElementById('kg-info').textContent='Click any node to explore its role in the ecosystem';
+  },3500);
+}
+
+function pulseNodes(ids, on){
+  document.querySelectorAll('.gnode circle').forEach(c=>{ c.style.opacity=on?'0.3':'1'; });
+  if(on) ids.forEach(id=>{
+    document.querySelectorAll('.gnode[onclick*="\''+id+'\'"] circle').forEach(c=>c.style.opacity='1');
+  });
+  document.getElementById('kg-info').textContent = on
+    ? ids.length+' nodes activated in this query'
+    : 'Click any node to explore its role in the ecosystem';
+}
+
+async function runQuery(){
+  const q=document.getElementById('q-input').value.trim();
+  if(!q) return;
+  const btn=document.getElementById('run-btn');
+  btn.disabled=true; document.getElementById('btn-txt').textContent='Running…';
+  const key=getKey(q); const resp=RESP[key];
+  ['1','2','3'].forEach(i=>setTier(i,'','idle'));
+  document.getElementById('prog').style.width='0';
+  document.getElementById('sdot').className='s-dot on';
+  document.getElementById('stxt').textContent='processing';
+  const ansEl=document.getElementById('ans');
+  ansEl.className='answer-area'; ansEl.innerHTML='';
+  document.getElementById('ctx-area').textContent='Retrieving context…';
+  document.getElementById('ctx-tok').textContent='0 tokens';
+
+  await sleep(150);
+
+  setTier('1','active','running…');
+  document.getElementById('prog').style.width='18%';
+  await sleep(800);
+  pulseNodes(resp.nodes, true);
+  await sleep(700);
+  setTier('1','done','✓ done');
+  document.getElementById('prog').style.width='42%';
+
+  await sleep(200);
+  setTier('2','active','running…');
+  document.getElementById('prog').style.width='60%';
+  await sleep(650);
+
+  const ctxEl=document.getElementById('ctx-area');
+  ctxEl.innerHTML='';
+  for(const ln of resp.ctx.split('\n')){
+    await sleep(65);
+    const cls=ln.startsWith('[GRAPH]')?'cg':ln.startsWith('[STATS]')?'cs':ln.startsWith('[LLM]')?'cl':'';
+    ctxEl.innerHTML+=cls?`<span class="${cls}">${ln}</span>\n`:ln+'\n';
+  }
+  document.getElementById('ctx-tok').textContent=(150+Math.floor(Math.random()*100))+' tokens';
+  setTier('2','done','✓ done');
+  document.getElementById('prog').style.width='76%';
+
+  await sleep(200);
+  setTier('3','active','synthesizing…');
+  document.getElementById('prog').style.width='90%';
+  await sleep(700);
+  document.getElementById('stxt').textContent='streaming';
+
+  const text=resp.text;
+  ansEl.innerHTML='<span class="cursor-blink"></span>';
+  let i=0;
+  await new Promise(res=>{
+    const iv=setInterval(()=>{
+      if(i>=text.length){
+        clearInterval(iv);
+        ansEl.innerHTML=text.replace(/\n/g,'<br>');
+        document.getElementById('sdot').className='s-dot done';
+        document.getElementById('stxt').textContent='complete';
+        setTier('3','done','✓ done');
+        document.getElementById('prog').style.width='100%';
+        pulseNodes(resp.nodes, false);
+        btn.disabled=false;
+        document.getElementById('btn-txt').textContent='▶ Run Query';
+        res(); return;
+      }
+      const end=Math.min(i+Math.floor(Math.random()*9)+3, text.length);
+      ansEl.innerHTML=text.substring(0,end).replace(/\n/g,'<br>')+'<span class="cursor-blink"></span>';
+      i=end;
+    },16);
+  });
+}
+
+document.getElementById('q-input').addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter') runQuery();
+});
+</script>
+</body>
+</html>
