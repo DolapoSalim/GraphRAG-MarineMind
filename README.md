@@ -3,7 +3,7 @@
 A lightweight **GraphRAG-based ecological reasoning system** for analyzing marine ecosystem dynamics using structured knowledge graphs, statistical ecological indicators, and local LLM reasoning.
 
 ---
-
+![Landing Frontend](data/documents/graphrag-marinemind-architecture.png "a title")
 ## Overview
 
 GraphRAG-MarineMind is a multi-layer retrieval-augmented generation system designed for **marine ecology analysis**, combining:
